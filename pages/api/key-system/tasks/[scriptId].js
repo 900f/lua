@@ -1,6 +1,6 @@
-import { getDb } from '../../../lib/db';
-import { getUserFromRequest } from '../../../../lib/auth';
-import { rateLimit } from '../../../../lib/ratelimit';
+import { getDb } from 'lib/db';
+import { getUserFromRequest } from 'lib/auth';
+import { rateLimit } from 'lib/ratelimit';
 
 export default async function handler(req, res) {
   const user = getUserFromRequest(req, res);

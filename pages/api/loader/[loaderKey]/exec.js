@@ -1,4 +1,4 @@
-import { getDb } from '../../../../lib/db';
+import { getDb } from 'lib/db';
 import { getIp } from '../../../../lib/auth';
 import { rateLimit } from '../../../../lib/ratelimit';
 
