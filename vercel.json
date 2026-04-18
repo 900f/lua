@@ -1,0 +1,11 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "crons": [
+    {
+      "path": "/api/admin/cleanup",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}
