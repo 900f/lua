@@ -9,16 +9,15 @@
     "db:init": "node scripts/init-db.js"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.3",
-    "bcryptjs": "^2.4.3",
-    "cookies-next": "^4.2.1",
-    "dotenv": "^17.4.2",
-    "jsonwebtoken": "^9.0.2",
-    "nanoid": "^3.3.7",
     "next": "14.2.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "uuid": "^9.0.1"
+    "@neondatabase/serverless": "^0.9.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "cookies-next": "^4.2.1",
+    "nanoid": "^3.3.7"
   },
   "devDependencies": {
     "eslint": "^8",

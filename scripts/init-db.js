@@ -19,6 +19,7 @@ async function init() {
     CREATE TABLE IF NOT EXISTS user_settings (
       user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
       theme TEXT DEFAULT 'pink',
+      dark_mode BOOLEAN DEFAULT FALSE,
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
@@ -128,3 +129,6 @@ async function init() {
 }
 
 init().catch(e => { console.error('Error:', e.message); process.exit(1); });
+
+// Run this separately to add dark_mode column if upgrading:
+// ALTER TABLE user_settings ADD COLUMN IF NOT EXISTS dark_mode BOOLEAN DEFAULT FALSE;

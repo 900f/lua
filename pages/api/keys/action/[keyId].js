@@ -1,11 +1,10 @@
-import { getDb } from 'lib/db';
-import { getUserFromRequest } from 'lib/auth';
-import { rateLimit } from 'lib/ratelimit';
+import { getDb } from '@/lib/db';
+import { getUserFromRequest } from '@/lib/auth';
+import { rateLimit } from '@/lib/ratelimit';
 
 export default async function handler(req, res) {
   const user = getUserFromRequest(req, res);
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
-
   const rl = rateLimit(`key_action:${user.id}`, 20, 10000);
   if (!rl.allowed) return res.status(429).json({ error: 'Too many requests.' });
 
@@ -22,8 +21,8 @@ export default async function handler(req, res) {
   if (req.method === 'PATCH') {
     const { action } = req.body;
     if (action === 'toggle') {
-      const [updated] = await sql`UPDATE script_keys SET active=NOT active WHERE id=${keyId} AND user_id=${user.id} RETURNING active`;
-      return res.json({ active: updated.active });
+      const [u] = await sql`UPDATE script_keys SET active=NOT active WHERE id=${keyId} AND user_id=${user.id} RETURNING active`;
+      return res.json({ active: u.active });
     }
     if (action === 'reset_hwid') {
       await sql`UPDATE script_keys SET hwid=NULL WHERE id=${keyId} AND user_id=${user.id}`;
