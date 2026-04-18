@@ -1,7 +1,7 @@
-import { getDb } from '../../../lib/db';
-import { getIp } from '../../../lib/auth';
-import { generateKeySystemToken } from '../../../lib/obfuscate';
-import { rateLimit } from '../../../lib/ratelimit';
+import { getDb } from 'lib/db';
+import { getIp } from 'lib/auth';
+import { generateKeySystemToken } from 'lib/obfuscate';
+import { rateLimit } from 'lib/ratelimit';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
