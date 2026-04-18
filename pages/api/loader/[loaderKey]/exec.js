@@ -78,7 +78,9 @@ export default async function handler(req, res) {
   }
 
   await logExec(sql, script, robloxName, ip, keyUsed, hwid, true, null);
-  return res.status(200).json({ s: script.script_content });
+  return res.status(200).json({
+    s: script.script_content || "",
+  });
 }
 
 async function logExec(sql, script, robloxName, ip, keyUsed, hwid, success, failReason) {
