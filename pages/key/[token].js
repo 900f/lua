@@ -139,9 +139,6 @@ export default function KeyPage() {
             >
               {copied ? 'Copied!' : 'Copy Key'}
             </button>
-            <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text2)', textAlign: 'center' }}>
-              Paste this key into the in-game menu as <span style={{ fontFamily: 'var(--mono)' }}>script_key</span>
-            </div>
           </div>
         )}
 

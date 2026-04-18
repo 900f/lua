@@ -18,12 +18,16 @@ export default async function handler(req, res) {
   if (!script) return res.status(404).json({ error: 'Script not found' });
 
   const token = generateKeySystemToken();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+  const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
+  req.headers.origin;
 
   await sql`
     INSERT INTO key_system_tokens (script_id, token, roblox_name, hwid, ip_address)
     VALUES (${script.id}, ${token}, ${robloxName || 'Unknown'}, ${hwid || null}, ${ip})
   `;
 
-  return res.json({ url: `${siteUrl}/key/${token}` });
+  return res.json({
+  url: `${siteUrl}/key/${token}`
+});
 }
