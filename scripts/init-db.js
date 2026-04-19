@@ -123,3 +123,6 @@ async function init() {
   process.exit(0);
 }
 init().catch(e => { console.error('❌', e.message); process.exit(1); });
+
+// Run this to add new tables if upgrading from v1:
+// await sql`CREATE TABLE IF NOT EXISTS webhooks (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE, url TEXT NOT NULL, events TEXT[] DEFAULT '{execution}', active BOOLEAN DEFAULT TRUE, created_at TIMESTAMPTZ DEFAULT NOW())`;

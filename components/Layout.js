@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
-
 export default function Layout({ user, children }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
