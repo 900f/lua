@@ -101,7 +101,7 @@ export default function Landing({ loggedIn }) {
               {[
                 ['XOR-Encoded Loaders','Real URLs and keys are hidden in the loader with XOR encoding — not readable in plain text'],
                 ['Server-Side Execution','Script source never leaves the server. Only the executing client receives it, decrypted in memory'],
-                ['HWID Binding','Keys bind to the first device's hardware ID. Sharing a key gets the second user blocked'],
+                ['HWID Binding',"Keys bind to the first device's hardware ID. Sharing a key gets the second user blocked"],
                 ['IP Banning','Instant IP-level blocks across all scripts. One ban, universal effect'],
                 ['Rate Limiting','Every endpoint rate-limited per IP. Brute force and DDoS mitigated automatically'],
                 ['Execution Logging','Full audit trail: IP, player name, key, HWID, timestamp on every execution'],
