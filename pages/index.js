@@ -4,7 +4,7 @@ import { verifyToken } from '../lib/auth';
 
 export default function Landing({ loggedIn }) {
   return (
-    <div className="landing">
+    <div className="landing" style={{overflowX:"hidden"}}>
       <nav className="landing-nav">
         <div className="landing-logo-text">Luvenn</div>
         <div className="landing-nav-links">
@@ -19,7 +19,7 @@ export default function Landing({ loggedIn }) {
       </nav>
 
       {/* Hero */}
-      <section className="hero-section">
+      <section className="hero-section" style={{overflow:'hidden'}}>
         <div style={{position:'absolute',top:-100,right:-200,width:700,height:700,borderRadius:'50%',background:'radial-gradient(circle,rgba(124,58,237,.1) 0%,transparent 70%)',pointerEvents:'none'}}/>
         <div>
           <div className="hero-eyebrow"><ShieldIcon size={12}/>Enterprise-grade script protection</div>
@@ -36,7 +36,7 @@ export default function Landing({ loggedIn }) {
             <Link href="/register" className="btn btn-primary btn-hero">Start for free</Link>
             <Link href="/login" className="btn btn-ghost btn-hero" style={{background:'rgba(124,58,237,.06)'}}>Sign in</Link>
           </div>
-          <div className="hero-stats">
+          <div className="hero-stats" style={{flexWrap:"wrap"}}>
             {[['Obfuscated','Loader URLs'],['0ms','Extra Latency'],['100%','Source Hidden'],['3 days','Log Retention']].map(([v,l])=>(
               <div key={l}>
                 <div className="hero-stat-value">{v}</div>
@@ -101,7 +101,7 @@ export default function Landing({ loggedIn }) {
               {[
                 ['XOR-Encoded Loaders','Real URLs and keys are hidden in the loader with XOR encoding — not readable in plain text'],
                 ['Server-Side Execution','Script source never leaves the server. Only the executing client receives it, decrypted in memory'],
-                ["HWID Binding","Keys bind to the first device's hardware ID. Sharing a key gets the second user blocked"],
+                ['HWID Binding','Keys bind to the first device's hardware ID. Sharing a key gets the second user blocked'],
                 ['IP Banning','Instant IP-level blocks across all scripts. One ban, universal effect'],
                 ['Rate Limiting','Every endpoint rate-limited per IP. Brute force and DDoS mitigated automatically'],
                 ['Execution Logging','Full audit trail: IP, player name, key, HWID, timestamp on every execution'],
