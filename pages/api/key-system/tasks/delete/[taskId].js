@@ -1,12 +1,11 @@
 import { getDb } from '@/lib/db';
 import { getUserFromRequest } from '@/lib/auth';
 import { rateLimit } from '@/lib/ratelimit';
-
 export default async function handler(req, res) {
   const user = getUserFromRequest(req, res);
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
   if (req.method !== 'DELETE') return res.status(405).end();
-  const rl = rateLimit(`ks_task_del:${user.id}`, 20, 10000);
+  const rl = rateLimit('kstd:'+user.id, 20, 10000);
   if (!rl.allowed) return res.status(429).json({ error: 'Too many requests.' });
   const { taskId } = req.query;
   const sql = getDb();

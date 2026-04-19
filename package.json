@@ -1,5 +1,5 @@
 {
-  "name": "luavault",
+  "name": "luvenn",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,6 @@
     "@neondatabase/serverless": "^0.9.3",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-    "uuid": "^9.0.1",
     "cookies-next": "^4.2.1",
     "nanoid": "^3.3.7"
   },
