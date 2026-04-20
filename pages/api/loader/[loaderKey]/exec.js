@@ -75,21 +75,41 @@ export default async function handler(req, res) {
       FROM script_keys
       WHERE script_id = ${script.id} AND key_value = ${keyValue} LIMIT 1
     `;
-    
+
     if (!sk || !sk.active) {
       await logExec(sql, script, robloxName, ip, keyValue, hwid, false, 'Invalid key');
       return res.status(403).json({ s: null, e: 'Invalid or disabled key.' });
     }
-    
+
+    // AUTO-MIGRATION: Convert old keys to HWID locked + 1 day expiry
+    let needsMigration = false;
+    if (!sk.hwid_locked) {
+      sk.hwid_locked = true;
+      needsMigration = true;
+    }
+    if (!sk.expires_at) {
+      sk.expires_at = new Date(Date.now() + 86400000); // 1 day from now
+      needsMigration = true;
+    }
+    if (needsMigration) {
+      await sql`
+        UPDATE script_keys 
+        SET hwid_locked = true, expires_at = ${sk.expires_at}
+        WHERE id = ${sk.id}
+      `;
+      console.log('🔧 Auto-migrated key:', sk.id);
+    }
+
     if (sk.expires_at && new Date(sk.expires_at) < new Date()) {
       await sql`UPDATE script_keys SET active = false WHERE id = ${sk.id}`;
       await logExec(sql, script, robloxName, ip, keyValue, hwid, false, 'Key expired');
       return res.status(403).json({ s: null, e: 'Key has expired.' });
     }
-    
+
     if (sk.hwid_locked) {
       if (!sk.hwid) {
         await sql`UPDATE script_keys SET hwid = ${hwid||null}, last_used = NOW() WHERE id = ${sk.id}`;
+        console.log('🔒 First use - bound HWID:', hwid);
       } else if (sk.hwid !== hwid) {
         await logExec(sql, script, robloxName, ip, keyValue, hwid, false, 'HWID mismatch');
         return res.status(403).json({ s: null, e: 'HWID mismatch.' });
