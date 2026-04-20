@@ -13,18 +13,19 @@ export default async function handler(req, res) {
   const rl = rateLimit('kst:'+ip, 10, 10000);
   if (!rl.allowed) return res.status(429).json({ error: 'Rate limited.' });
   
-  // Get params from body (POST) or query (GET)
-  let loaderKey, robloxName, hwid;
+  // Get loaderKey from URL query param (since we put it there)
+  let loaderKey = req.query.key;
+  let robloxName = req.query.n || req.body?.n;
+  let hwid = req.query.h || req.body?.h;
   
+  // Also check body for POST requests
   if (req.method === 'POST') {
-    loaderKey = req.body?.key || req.body?.loaderKey;
-    robloxName = req.body?.n || req.body?.robloxName;
-    hwid = req.body?.h || req.body?.hwid;
-  } else {
-    loaderKey = req.query.key || req.query.loaderKey;
-    robloxName = req.query.n || req.query.robloxName;
-    hwid = req.query.h || req.query.hwid;
+    loaderKey = loaderKey || req.body?.key;
+    robloxName = robloxName || req.body?.n;
+    hwid = hwid || req.body?.h;
   }
+  
+  console.log('📡 Token request - loaderKey:', loaderKey, 'method:', req.method, 'query:', req.query);
   
   if (!loaderKey) {
     return res.status(400).json({ error: 'Missing key parameter' });
@@ -32,11 +33,17 @@ export default async function handler(req, res) {
   
   const sql = getDb();
   const [script] = await sql`SELECT id FROM scripts WHERE loader_key=${loaderKey} AND use_key_system=true AND active=true LIMIT 1`;
-  if (!script) return res.status(404).json({ error: 'Script not found' });
+  
+  if (!script) {
+    console.log('❌ Script not found for loaderKey:', loaderKey);
+    return res.status(404).json({ error: 'Script not found' });
+  }
   
   const token = generateKeySystemToken();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+  
   await sql`INSERT INTO key_system_tokens (script_id, token, roblox_name, hwid, ip_address) VALUES (${script.id}, ${token}, ${robloxName || 'Unknown'}, ${hwid || null}, ${ip})`;
   
+  console.log('✅ Token created:', token);
   return res.json({ url: siteUrl + '/key/' + token });
 }
