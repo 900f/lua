@@ -205,7 +205,7 @@ export default function Keys({ user }) {
 }
 
 function GenerateModal({script,onClose,onDone}) {
-  const [form,setForm]=useState({count:1,note:'',hwid_locked:false,duration:'lifetime'});
+  const [form,setForm]=useState({count:1,note:'',hwid_locked:true,duration:'day'});
   const [loading,setLoading]=useState(false);
   const [generated,setGenerated]=useState(null);
 

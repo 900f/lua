@@ -25,9 +25,9 @@ export default async function handler(req, res) {
   }
   if (req.method === 'POST') {
     const note = sanitize(req.body.note||'', 200);
-    const hwid_locked = req.body.hwid_locked === true;
+    const hwid_locked = true; // Force HWID lock on all keys
     const count = Math.min(parseInt(req.body.count)||1, 100);
-    const duration = ['day','week','month','lifetime'].includes(req.body.duration) ? req.body.duration : 'lifetime';
+    const duration = ['day','week','month','lifetime'].includes(req.body.duration) ? req.body.duration : 'day';
     const expires_at = getExpiry(duration);
     const created = [];
     for (let i=0;i<count;i++) {
