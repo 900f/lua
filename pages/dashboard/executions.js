@@ -63,6 +63,26 @@ export default function Executions({ user }) {
     else toast('Failed to ban IP', 'error');
   }
 
+  async function deleteExecution(executionId) {
+    const ok = await confirm({
+      title: 'Delete execution log',
+      message: 'This log will be permanently removed.',
+      confirmLabel: 'Delete',
+      confirmClass: 'btn-danger',
+    });
+    if (!ok) return;
+
+    try {
+      const r = await fetch(`/api/executions/${executionId}`, { method: 'DELETE' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || 'Failed to delete execution');
+      setExecutions(prev => prev.filter(e => e.id !== executionId));
+      toast('Execution deleted');
+    } catch (e) {
+      toast(e.message || 'Failed to delete execution', 'error');
+    }
+  }
+
   const filtered = executions.filter(e => {
     if (statusFilter === 'success') return e.success;
     if (statusFilter === 'failed') return !e.success;
@@ -200,16 +220,26 @@ export default function Executions({ user }) {
                       {new Date(e.executed_at).toLocaleString()}
                     </td>
                     <td>
-                      {e.ip_address && e.ip_address !== 'unknown' && (
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        {e.ip_address && e.ip_address !== 'unknown' && (
+                          <button
+                            className="btn btn-xs btn-danger"
+                            style={{ flexShrink: 0 }}
+                            onClick={() => banIp(e.ip_address)}
+                            title="Ban IP"
+                          >
+                            <BanIcon />
+                          </button>
+                        )}
                         <button
-                          className="btn btn-xs btn-danger"
+                          className="btn btn-xs btn-ghost"
                           style={{ flexShrink: 0 }}
-                          onClick={() => banIp(e.ip_address)}
-                          title="Ban IP"
+                          onClick={() => deleteExecution(e.id)}
+                          title="Delete log"
                         >
-                          <BanIcon />
+                          <TrashIcon />
                         </button>
-                      )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -224,6 +254,7 @@ export default function Executions({ user }) {
 
 function RefreshIcon() { return <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>; }
 function BanIcon() { return <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>; }
+function TrashIcon() { return <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2"/><path d="M19 6l-1 14a1 1 0 01-1 1H7a1 1 0 01-1-1L5 6"/></svg>; }
 function ChevronIcon() { return <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>; }
 
 export async function getServerSideProps({ req, res }) {

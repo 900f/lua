@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import { useToast, ToastContainer } from '../../components/Toast';
+import { useConfirm } from '../../components/ConfirmModal';
 import { getCookie } from 'cookies-next';
 import { verifyToken } from '../../lib/auth';
 
@@ -9,6 +10,7 @@ export default function Keys({ user }) {
   const router = useRouter();
   const { scriptId } = router.query;
   const { toasts, toast } = useToast();
+  const { confirm, ConfirmDialog } = useConfirm();
   const [scripts, setScripts] = useState([]);
   const [selected, setSelected] = useState(null);
   const [keys, setKeys] = useState([]);
@@ -59,7 +61,13 @@ export default function Keys({ user }) {
   }
 
   async function deleteKey(id) {
-    if (!confirm('Delete this key?')) return;
+    const ok = await confirm({
+      title: 'Delete key',
+      message: 'This key will be permanently removed.',
+      confirmLabel: 'Delete',
+      confirmClass: 'btn-danger',
+    });
+    if (!ok) return;
     const r = await fetch(`/api/keys/action/${id}`,{method:'DELETE'});
     if (r.ok) { toast('Key deleted.'); loadKeys(selected.id); } else toast('Failed.','error');
   }
@@ -70,12 +78,25 @@ export default function Keys({ user }) {
   }
 
   async function resetHwid(id) {
-    if (!confirm('Reset HWID? Next device will bind.')) return;
+    const ok = await confirm({
+      title: 'Reset HWID',
+      message: 'Current HWID binding will be removed. The next device to use this key will bind automatically.',
+      confirmLabel: 'Reset HWID',
+      confirmClass: 'btn-danger',
+    });
+    if (!ok) return;
     const r = await fetch(`/api/keys/action/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'reset_hwid'})});
     if (r.ok) { toast('HWID reset.'); loadKeys(selected.id); } else toast('Failed.','error');
   }
 
   async function deleteTask(id) {
+    const ok = await confirm({
+      title: 'Delete task',
+      message: 'This key-system task will be removed.',
+      confirmLabel: 'Delete',
+      confirmClass: 'btn-danger',
+    });
+    if (!ok) return;
     const r = await fetch(`/api/key-system/tasks/delete/${id}`,{method:'DELETE'});
     if (r.ok) { toast('Task removed.'); loadTasks(selected.id); } else toast('Failed.','error');
   }
@@ -97,6 +118,7 @@ export default function Keys({ user }) {
   return (
     <Layout user={user}>
       <ToastContainer toasts={toasts}/>
+      {ConfirmDialog}
       <div className="page-header">
         <div><div className="page-title">Keys</div><div className="page-sub">Generate and manage license keys with HWID locking</div></div>
       </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import { useToast, ToastContainer } from '../../components/Toast';
+import { useConfirm } from '../../components/ConfirmModal';
 import { getCookie } from 'cookies-next';
 import { verifyToken } from '../../lib/auth';
 
@@ -13,6 +14,7 @@ const EVENT_OPTIONS = [
 
 export default function Webhooks({ user }) {
   const { toasts, toast } = useToast();
+  const { confirm, ConfirmDialog } = useConfirm();
   const [webhooks, setWebhooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
@@ -27,7 +29,13 @@ export default function Webhooks({ user }) {
   }
 
   async function del(id) {
-    if (!confirm('Delete this webhook?')) return;
+    const ok = await confirm({
+      title: 'Delete webhook',
+      message: 'This webhook URL will stop receiving events.',
+      confirmLabel: 'Delete',
+      confirmClass: 'btn-danger',
+    });
+    if (!ok) return;
     const r = await fetch(`/api/webhooks/${id}`,{method:'DELETE'});
     if (r.ok) { toast('Webhook deleted.'); load(); } else toast('Failed.','error');
   }
@@ -40,6 +48,7 @@ export default function Webhooks({ user }) {
   return (
     <Layout user={user}>
       <ToastContainer toasts={toasts}/>
+      {ConfirmDialog}
       <div className="page-header">
         <div>
           <div className="page-title">Webhooks</div>
