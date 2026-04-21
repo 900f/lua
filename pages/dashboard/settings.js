@@ -133,14 +133,11 @@ export default function Settings({ user }) {
         <div style={{fontWeight:800,fontSize:15,marginBottom:4,letterSpacing:'-.3px'}}>Integration Reference</div>
         <div style={{fontSize:13,color:'var(--text2)',marginBottom:16}}>Loadstring patterns for your scripts</div>
         <div style={{position:'relative'}}>
-          <pre className="code-block">{`-- Open access (no key required)
-loadstring(game:HttpGet("${siteUrl}/api/loader/[32charkey].lua",true))()
+          <pre className="code-block">{`loadstring(game:HttpGet("${siteUrl}/api/loader/[32charkey].lua",true))()
 
--- Key protected (user defines script_key first)
 script_key = "your40charalphanumerickey"
 loadstring(game:HttpGet("${siteUrl}/api/loader/[32charkey].lua",true))()
 
--- Built-in key system (in-game menu appears automatically)
 loadstring(game:HttpGet("${siteUrl}/api/loader/[32charkey].lua",true))()`}</pre>
         </div>
         <div className="alert alert-info" style={{marginTop:14,fontSize:12}}>
