@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     return res.status(200).send('--'+fake);
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL||'https://luvenn.vercel.app';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL||'https://luvenn.xyz';
   const lua = buildLoaderScript(script.loader_key, siteUrl, script.key_protected, script.use_key_system);
 
   res.setHeader('Content-Type','text/plain; charset=utf-8');
